@@ -1,0 +1,132 @@
+#main {
+	max-width:1200px;
+	margin:0 auto;
+
+}
+
+.header {
+    background-color: antiquewhite;
+}
+
+.footer{
+    background-color: antiquewhite;
+}
+.menu ul {
+    overflow:hidden;
+    list-style:none;
+    margin: 0 auto;
+    z-index: 20;
+}
+ 
+.menu ul li {
+    display: inline-block;
+    padding: 26px 10px 20px 10px;
+}
+
+span.required {
+    background-color: orange;
+    color: white;
+    font-size: 0.8em;
+    padding: 0.3em;
+}
+
+span.optional {
+    background-color: black;
+    color: white;
+    font-size: 0.8em;
+    padding: 0.3em;
+}
+
+textarea{
+	width:100%;
+}
+
+.select_service select{
+	width:95%;
+}
+select#industry{
+	width:100%;
+}
+
+#name_sei{
+	width:200px;
+}
+#name_mei{
+	width:200px;
+}
+
+label.error {
+  color: red;
+  position: relative;
+}
+
+select.error {
+  color: black;
+  position: relative;
+}
+
+.box {
+  float: left;
+  width:250px;
+}
+
+.box_service {
+  float: left;
+  width: 45%;
+}
+
+.boxContainer {
+  overflow: hidden;
+}
+
+table {
+  width:100%;
+  margin:10px;
+}
+table th,td{
+  border:1px solid #111
+}
+
+th.title{
+  width:20%;
+}
+th.category{
+  width:20%;
+}
+th.body{
+  width:30%;
+}
+th.updated{
+  width:15%;
+}
+th.action{
+  width:5%;
+}
+th.category_name{
+  width:70%;
+}
+
+input[name="category_name"]{
+  width:60%;
+}
+
+input[name="title"]{
+  width:100%;
+}
+
+select[name="category_id"]{
+  width:100%;
+}
+
+textarea[name="body"]{
+  height:200px;
+  width:100%;
+}
+
+.error{
+  color:red;
+}
+
+.body{
+  padding:5px;
+}

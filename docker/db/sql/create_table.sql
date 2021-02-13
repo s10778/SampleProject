@@ -1,0 +1,25 @@
+
+DROP TABLE IF EXISTS categories;
+CREATE TABLE categories(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    category_name VARCHAR(100) NOT NULL,
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_deleted TINYINT DEFAULT 0,
+    PRIMARY KEY (id)
+)comment='ブログのカテゴリー';;
+
+DROP TABLE IF EXISTS blogs;
+
+CREATE TABLE blogs(
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    category_id INT,
+    title VARCHAR(200) NOT NULL,
+    body TEXT,
+    created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    is_deleted TINYINT DEFAULT 0,
+    PRIMARY KEY (id)
+)comment='ブログ';
+
+create index blogs_category_index on blogs(category_id);
