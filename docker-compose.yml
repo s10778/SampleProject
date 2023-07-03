@@ -12,6 +12,7 @@ services:
 
   sample-db:
     image: mysql:5.7
+    platform: linux/amd64 #M1チップの為の記述
     container_name: sample-db
     environment:
       MYSQL_ROOT_PASSWORD: root
