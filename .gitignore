@@ -1,2 +1,3 @@
 logs/app.log
 docker/db/data/*
+.DS_Store
