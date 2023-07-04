@@ -3,18 +3,27 @@
 require_once(Env::CONTROLLER_PATH . 'AppController.php');
 
 /**
- * ブログのコントローラ
+ * ログインのコントローラ
  *
- * @author Yuji Seki
  * @version 1.0.0
  */
 class LoginController extends AppController
 {
+	/**
+	 * ログイン画面のアクション
+	 *
+	 * @return void
+	 */
 	public function index()
 	{
 		$this->viewFile = 'login/index.php';
 	}
 
+	/**
+	 * ログイン認証処理
+	 *
+	 * @return void
+	 */
 	public function authenticate()
 	{
 		$loginId = $_POST['login_id'];
