@@ -10,16 +10,6 @@ require_once(Env::CONTROLLER_PATH . 'AppController.php');
  */
 class LoginController extends AppController
 {
-	public function __construct()
-	{
-
-	}
-
-	/**
-	 * 一覧表示画面のアクション
-	 *
-	 * @return void
-	 */
 	public function index()
 	{
 		$this->viewFile = 'login/index.php';
@@ -27,10 +17,10 @@ class LoginController extends AppController
 
 	public function authenticate()
 	{
-		$login_id = $_POST['login_id'];
+		$loginId = $_POST['login_id'];
 		$password = $_POST['password'];
 
-		if ($login_id === Config::LOGIN_ID && $password === Config::PASSWORD) {
+		if ($loginId === Config::LOGIN_ID && $password === Config::PASSWORD) {
 			$_SESSION['login_id'] = $_POST['login_id'];
 			header("Location: /");
 			exit;
