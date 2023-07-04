@@ -1,3 +1,12 @@
+<?php
+if (!isset($_SESSION['login_id'])) {
+    header("Location: /login");
+    exit;
+}
+?>
+
+
+
 <!DOCTYPE HTML>
 <html lang="ja">
 

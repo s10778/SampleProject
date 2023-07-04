@@ -1,3 +1,10 @@
+<?php
+if (!isset($_SESSION['login_id'])) {
+    header("Location: /login");
+    exit;
+}
+?>
+
 <h1>カテゴリー一覧</h1>
 <a href="./admin_add_view">新規作成＋</a>
 <table>

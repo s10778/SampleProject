@@ -2,7 +2,7 @@
 
 /**
  * ルーティング設定用クラス
- * 
+ *
  * @author Yuji Seki
  * @version 1.0.0
  */
@@ -16,12 +16,12 @@ class Routes
      * @var Route
      */
     private static Routes $instance;
-	
+
     /**
      * ルーティングの指定
-     * 
+     *
      * @var array
-     * 
+     *
      */
     private array $routes = array();
 
@@ -34,7 +34,7 @@ class Routes
     public function getInstance():Routes{
 
         return self::$instance ?? self::$instance = new self();
-        
+
     }
 
     /**
@@ -43,7 +43,7 @@ class Routes
     private function __construct(){
 
     }
-	
+
 
     /**
      * ルーティングのパスを追加する
@@ -88,7 +88,7 @@ class Routes
      */
     public function getAction( string $path ):string {
 
-        
+
         if( array_key_exists( $path , $this->routes )){
             return $this->routes[$path]['action'];
         }
@@ -135,7 +135,7 @@ class Routes
             if( !empty( $value ) ){
                 $retData = $value;
             }
-        } 
+        }
 
         return $retData;
     }
