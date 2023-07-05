@@ -46,6 +46,7 @@ Routes::getInstance()->addRoute( '/blog/admin_edit_view' , 'BlogController' , 'a
 Routes::getInstance()->addRoute( '/blog/admin_delete' , 'BlogController' , 'admin_delete', 'id');
 Routes::getInstance()->addRoute( '/login' , 'LoginController', 'index');
 Routes::getInstance()->addRoute( '/login/authenticate' , 'LoginController', 'authenticate');
+Routes::getInstance()->addRoute( '/post/create' , 'PostController', 'create');
 
 if (isset($_GET)) $_GET = Util::sanitize($_GET); //NULLバイト除去　ヌルバイト攻撃対策
 if (isset($_POST)) $_POST = Util::sanitize($_POST); //NULLバイト除去　ヌルバイト攻撃対策
