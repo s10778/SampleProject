@@ -2,9 +2,9 @@
 
 /**
  * コントローラーの基底クラス
- * 
+ *
  * @author Yuji Seki
- * @version 1.0.0 
+ * @version 1.0.0
  */
 class AppController extends Controller
 {
@@ -16,14 +16,11 @@ class AppController extends Controller
 	 * @return void
 	 */
 	protected function checkCSRFToken()
-	{	
+	{
 		if (!empty($_SESSION['token']) && $_SESSION['token'] === $_POST['token']) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
-    
-	
 }

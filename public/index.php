@@ -1,11 +1,11 @@
 <?php
 
 /**
- * 
- * 
- * 
- * 
- * 
+ *
+ *
+ *
+ *
+ *
  * @author Yuji Seki
  * @version 1.0.0
  */
@@ -44,6 +44,8 @@ Routes::getInstance()->addRoute( '/blog/admin_add_view' , 'BlogController' , 'ad
 Routes::getInstance()->addRoute( '/blog/admin_edit' , 'BlogController' , 'admin_edit', 'id' );
 Routes::getInstance()->addRoute( '/blog/admin_edit_view' , 'BlogController' , 'admin_edit_view', 'id' );
 Routes::getInstance()->addRoute( '/blog/admin_delete' , 'BlogController' , 'admin_delete', 'id');
+Routes::getInstance()->addRoute( '/login' , 'LoginController', 'index');
+Routes::getInstance()->addRoute( '/login/authenticate' , 'LoginController', 'authenticate');
 
 if (isset($_GET)) $_GET = Util::sanitize($_GET); //NULLバイト除去　ヌルバイト攻撃対策
 if (isset($_POST)) $_POST = Util::sanitize($_POST); //NULLバイト除去　ヌルバイト攻撃対策
@@ -87,13 +89,17 @@ $data = $controller -> getData();
 $validateErrors = $controller -> getValidateErrors();
 
 // テンプレート読み込み ob_startを使用することで、Viewファイルの内容を変数に格納。
-ob_start();
-include(Env::VIEW_PATH . $controller->getView());
-$contents = ob_get_contents();
-ob_end_clean();
+$view = $controller->getView();
+if(!empty($view)) {
+    ob_start();
+    include(Env::VIEW_PATH . $controller->getView());
+    $contents = ob_get_contents();
+    ob_end_clean();
 
-include(Env::VIEW_PATH . $controller->getLayout());
-
-
-
-
+    $layout = $controller->getLayout();
+    if(!empty($layout)) {
+        include(Env::VIEW_PATH . $controller->getLayout());
+    }else{
+        echo $contents;
+    }
+}

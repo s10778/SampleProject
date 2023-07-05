@@ -1,3 +1,10 @@
+<?php
+if (!isset($_SESSION['login_id'])) {
+    header("Location: /login");
+    exit;
+}
+?>
+
 <h1>ブログ追加</h1>
 
 <?php if (!empty($data['blog_add_error'])) : ?>

@@ -3,7 +3,7 @@
 
 /**
  * 設定クラス
- * 
+ *
  * @author Yuji Seki
  * @version 1.0.0
  */
@@ -27,7 +27,7 @@ class Config
 	 */
 	const LOG_LEVEL = 3;
 
-	
+
 
 	/**
 	 * ログファイル名
@@ -44,6 +44,7 @@ class Config
 	 */
 	const LOGFILE_PERIOD = 30;
 
-	
+	const LOGIN_ID = 'admin';
 
+	const PASSWORD = 'password123';
 }

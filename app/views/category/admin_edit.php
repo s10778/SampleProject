@@ -1,3 +1,10 @@
+<?php
+if (!isset($_SESSION['login_id'])) {
+    header("Location: /login");
+    exit;
+}
+?>
+
 <h1>カテゴリー編集</h1>
 
 <?php if(!empty($data['category_edit_error']) ):?>

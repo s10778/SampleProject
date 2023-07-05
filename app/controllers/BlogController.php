@@ -6,9 +6,9 @@ require_once(Env::MODEL_PATH . 'CategoryModel.php');
 
 /**
  * ブログのコントローラ
- * 
+ *
  * @author Yuji Seki
- * @version 1.0.0 
+ * @version 1.0.0
  */
 class BlogController extends AppController
 {
