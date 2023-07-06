@@ -3,7 +3,7 @@
 
 /**
  * Modelの既定クラス
- * 
+ *
  * @author Yuji Seki
  * @version 1.0.0
  */
@@ -115,6 +115,20 @@ class Model
     }
 
 
+    public function getPostId($sql, $params = array())
+    {
+
+        $prepare = $this->pdo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+
+        $preparedParams = $this->changePreparedKeys($params);
+        $prepare->execute($preparedParams);
+
+        Logger::getInstance()->debug($sql);
+        Logger::getInstance()->debug(print_r($preparedParams, true));
+
+        return $prepare->fetch();
+    }
+
     /**
      * 検索処理
      *
@@ -199,7 +213,6 @@ class Model
         return $prepare->execute($preparedParams);
     }
 
-
     /**
      * データ更新
      *
@@ -270,11 +283,11 @@ class Model
     /**
      * バリデーションの実行
      * validateFields
-     *  arary( 
-     *     'フィールド名' => array( 
+     *  arary(
+     *     'フィールド名' => array(
      *      'required' => array( 'message'=>'入力必須です' )
      *      'maxLength' => array( 'value'=> 100, 'message'=>'最大100文字までで入力してください' )
-     *     ) 
+     *     )
      *  )
      *  などの設定から、バリデーションを実行する
      * @return boolean
@@ -284,7 +297,7 @@ class Model
         $retAll = true;
         foreach( $this->validateFields as $field => $validationSettings ){
             foreach( $validationSettings as $key => $value ){
-            
+
                 $rClass = new ReflectionClass('ValidateUtil');
                 //第一引数をnullにするとstaticなメソッド呼び出し。フィールド名と、設定の値を引数として渡す
                 $checkParams = array();
@@ -293,7 +306,7 @@ class Model
                 if( !empty( $value['value']) ){
                     $checkParams[] = $value['value'];
                 }
-                
+
                 $ret = $rClass->getMethod($key)->invokeArgs(null, $checkParams);
 
                 if( $ret === false ){

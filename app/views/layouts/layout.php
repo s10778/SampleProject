@@ -32,6 +32,7 @@ if (!isset($_SESSION['login_id'])) {
 					<li><a href="/" class="btn2">Home</a></li>
 					<li><a href="/category/admin_index" class="btn4">カテゴリー管理</a></li>
 					<li><a href="/blog/admin_index" class="btn4">ブログ管理</a></li>
+					<li><a href="/post/create" class="btn4">新規投稿</a></li>
 				</ul>
 			</div>
 			<?php echo $contents; ?>

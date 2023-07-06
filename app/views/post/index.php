@@ -15,7 +15,9 @@
 <body>
   <h2>新規投稿</h2>
 
-  <form method="POST" action="/post/create">
+  <form method="POST" action="/post/store" enctype="multipart/form-data">
+
+    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
 
     <div>
       <label for="sent_date">送信日時</label>
@@ -39,21 +41,21 @@
 
       <div id="sender1Input" style="display: none;">
         <label>CSV</label>
-        <input type="file" id="sender1" name="member_id">
+        <input type="file" name="member_id"/>
       </div>
 
       <div id="sender2Input" style="display: none;">
         <label>職員/会員番号</label>
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字"><br/>
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字">
-        <input type="text" id="sender3" placeholder="半角数字"><br/>
+        <input type="text" name="member1" placeholder="半角数字"/>
+        <input type="text" name="member2" placeholder="半角数字"/>
+        <input type="text" name="member3" placeholder="半角数字"/>
+        <input type="text" name="member4" placeholder="半角数字"/>
+        <input type="text" name="member5" placeholder="半角数字"/><br/>
+        <input type="text" name="member6" placeholder="半角数字"/>
+        <input type="text" name="member7" placeholder="半角数字"/>
+        <input type="text" name="member8" placeholder="半角数字"/>
+        <input type="text" name="member9" placeholder="半角数字"/>
+        <input type="text" name="member10" placeholder="半角数字"/><br/>
       </div>
     </div>
 
