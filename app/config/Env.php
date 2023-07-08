@@ -81,4 +81,7 @@ class Env
 	 */
 	const LOGDIR_PATH = __DIR__ . '/../../logs/';
 
+    const LOGIN_ID = 'admin';
+
+	const PASSWORD = 'password123';
 }

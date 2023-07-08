@@ -101,7 +101,6 @@ class Model
      */
     public function query($sql, $params = array())
     {
-
         $prepare = $this->pdo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 
         $preparedParams = $this->changePreparedKeys($params);
@@ -111,23 +110,10 @@ class Model
         Logger::getInstance()->debug(print_r($preparedParams, true));
 
         //データは全件取得
-        return $prepare->fetchAll();
+        return $prepare->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
-    public function getPostId($sql, $params = array())
-    {
-
-        $prepare = $this->pdo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-
-        $preparedParams = $this->changePreparedKeys($params);
-        $prepare->execute($preparedParams);
-
-        Logger::getInstance()->debug($sql);
-        Logger::getInstance()->debug(print_r($preparedParams, true));
-
-        return $prepare->fetch();
-    }
 
     /**
      * 検索処理
@@ -267,6 +253,7 @@ class Model
      */
     public function beginTransaction()
     {
+        $this->pdo->beginTransaction();
     }
 
 
@@ -277,6 +264,17 @@ class Model
      */
     public function commit()
     {
+        $this->pdo->commit();
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @return void
+     */
+    public function rollBack()
+    {
+        $this->pdo->rollBack();
     }
 
 

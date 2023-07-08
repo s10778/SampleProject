@@ -40,14 +40,7 @@ class PostMemberModel extends AppModel
         'created_at',
         'updated_at',
     );
-
-    public function getPost()
-    {
-
-        $sql = 'select app_posts.post_id FROM app_posts ORDER BY app_posts.post_id DESC';
-
-        return $this->getPostId($sql);
-    }
+    
 
     /**
      * データ挿入
@@ -59,16 +52,36 @@ class PostMemberModel extends AppModel
     public function insertMember($members, $lastPostId)
     {
         // SQLの生成
-        $sql = 'INSERT INTO ' . $this->tableName . ' (post_id, member_id) VALUES (:post_id, :member_id)';
+        $sql = 'INSERT INTO ' . $this->tableName . ' (post_id, member_id) VALUES ';
 
-        $prepare = $this->pdo->prepare($sql);
-
-        foreach ($members as $member) {
-            $prepare->bindValue(':post_id', $lastPostId, PDO::PARAM_INT);
-            $prepare->bindValue(':member_id', $member, PDO::PARAM_INT);
-
-            // 実行などの追加処理...
-            $prepare->execute();
+        $insertValues = [];
+        $bindingParams = [];
+        foreach ($members as $key => $member) {
+            $insertValues[] = "(:postId, :memberId{$key})";
+            $bindingParams[":memberId{$key}"] = $member;
         }
+        $sql .= implode(', ', $insertValues);
+
+        Logger::getInstance()->debug($sql);
+
+        $prepare = $this->pdo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+
+        // Bind the lastPostId to the parameter.
+        $bindingParams[":postId"] = $lastPostId;
+        foreach ($bindingParams as $key => $value) {
+            $prepare->bindValue($key, $value);
+        }
+
+        // 実行などの追加処理...
+
+        // return文を追加する必要があります
+        return $prepare->execute();
     }
+
+    public function exportMember($id)
+    {
+        $sql = 'select app_posts_members.member_id FROM app_posts_members WHERE post_id = ' . $id;
+        return $this->query($sql);
+    }
+
 }

@@ -1,85 +1,71 @@
-<!DOCTYPE HTML>
-<html lang="ja">
+<?php
+if (!isset($_SESSION['login_id'])) {
+    header("Location: /login");
+    exit;
+}
+?>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="format-detection" content="telephone=no">
-  <title><?php echo $title ?></title>
-  <meta name="Description" content="<?php echo $description; ?>" />
-  <meta name="Keywords" content="<?php echo $keyword; ?>" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <link rel="stylesheet" type="text/css" href="/assets/css/style.css" media="screen" />
-</head>
+<h1>お知らせ一覧</h1>
+<?php if (!empty($data['posts'])) : ?>
+    <?php foreach ($data['posts'] as $key => $posts) : ?>
+        <div style="width: 288px; height: auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,.2); margin-bottom: 20px;">
 
-<body>
-  <h2>新規投稿</h2>
+            <div><?php echo Util::h($posts['updated_at']); ?></div>
+            <div>
+                <button id="myBtn_<?php echo $key ?>">確認</button>
 
-  <form method="POST" action="/post/store" enctype="multipart/form-data">
+                <div id="myModal_<?php echo $key ?>" class="modal">
+                    <!-- Modal content -->
+                    <div class="modal-content">
+                        <span class="close close_<?php echo $key ?>">&times;</span>
+                        <h3>お知らせ詳細</h3>
+                        <label>送信対象</label>
+                        <a href="indexDetail/<?php echo $posts['post_id'] ?>">
+                            <button>ダウンロード</button>
+                        </a>
+                    </div>
+                </div>
 
-    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
 
-    <div>
-      <label for="sent_date">送信日時</label>
-      <input type="datetime-local" name="sent_date" id="sent_date" required value=""/>
-    </div>
+                <script>
+                    // Get the modal
+                    var modal = document.getElementById("myModal_<?php echo $key ?>");
 
-    <div>
-      <label for="title">タイトル</label>
-      <input type="text" name="title" id="title" placeholder="最大文字数100文字" required value=""/>
-    </div>
+                    // Get the button that opens the modal
+                    var btn = document.getElementById("myBtn_<?php echo $key ?>");
 
-    <div>
-      <label for="body">本文</label>
-      <textarea id="body" name="body"></textarea>
-    </div>
+                    // Get the <span> element that closes the modal
+                    var span = document.getElementsByClassName("close_<?php echo $key ?>")[0];
 
-    <div>
-      <label>送信先</label>
-      <input type="radio" name="sender" value="CSV" onchange="toggleInput()"/>CSV (A列:職員番号)<br/>
-      <input type="radio" name="sender" value="会員個別" onchange="toggleInput()"/>会員個別<br/>
+                    // When the user clicks the button, open the modal
+                    btn.onclick = function () {
+                        modal.style.display = "block";
+                    };
 
-      <div id="sender1Input" style="display: none;">
-        <label>CSV</label>
-        <input type="file" name="member_id"/>
-      </div>
+                    // When the user clicks on <span> (x), close the modal
+                    span.onclick = function () {
+                        modal.style.display = "none";
+                    };
 
-      <div id="sender2Input" style="display: none;">
-        <label>職員/会員番号</label>
-        <input type="text" name="member1" placeholder="半角数字"/>
-        <input type="text" name="member2" placeholder="半角数字"/>
-        <input type="text" name="member3" placeholder="半角数字"/>
-        <input type="text" name="member4" placeholder="半角数字"/>
-        <input type="text" name="member5" placeholder="半角数字"/><br/>
-        <input type="text" name="member6" placeholder="半角数字"/>
-        <input type="text" name="member7" placeholder="半角数字"/>
-        <input type="text" name="member8" placeholder="半角数字"/>
-        <input type="text" name="member9" placeholder="半角数字"/>
-        <input type="text" name="member10" placeholder="半角数字"/><br/>
-      </div>
-    </div>
-
-    <script>
-      function toggleInput() {
-        var selectedField = document.querySelector('input[name="sender"]:checked').value;
-        var sender1Input = document.getElementById('sender1Input');
-        var sender2Input = document.getElementById('sender2Input');
-
-        // すべての入力フィールドを非表示にする
-        sender1Input.style.display = "none";
-        sender2Input.style.display = "none";
-
-        // 選択された入力フィールドを表示する
-        if (selectedField === "CSV") {
-          sender1Input.style.display = "block";
-        } else if (selectedField === "会員個別") {
-          sender2Input.style.display = "block";
-        }
-      }
-    </script>
-
-    <input type="submit" value="送信"/>
-  </form>
-</body>
-
-</html>
+                    // When the user clicks anywhere outside of the modal, close it
+                    window.onclick = function (event) {
+                        if (event.target == modal) {
+                        modal.style.display = "none";
+                        }
+                    };
+                </script>
+            </div>
+            <div>
+                <a href="">
+                    <button type="button">編集</button>
+                </a>
+            </div>
+            <div>
+                <a href="">
+                    <button type="button">削除</button>
+                </a>
+            </div>
+            <div><?php echo Util::h($posts['title']); ?></div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

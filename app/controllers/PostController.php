@@ -49,6 +49,35 @@ class PostController extends AppController
         $this->postModel = new PostModel();
         $this->postMemberModel = new PostMemberModel();
 	}
+
+    /**
+     * 一覧表示画面のアクション
+     *
+     * @return void
+     */
+    public function index()
+    {
+        $order = 'ORDER BY app_posts.updated_at DESC';
+		$this->data['posts'] = $this->postModel->findAllPost($order);
+
+        $this->viewFile = 'post/index.php';
+    }
+
+
+    public function indexDetail($id)
+    {
+        $data = $this->postMemberModel->exportMember($id);
+        $filename = 'output.csv';
+        // データを一行にまとめる
+        $outputData = [];
+        foreach ($data as $line) {
+            $outputData[] = $line['member_id'];
+        }
+        CsvExport::export($outputData, $filename);
+    }
+
+
+
     /**
      * 新規作成画面のアクション
      *
@@ -56,7 +85,8 @@ class PostController extends AppController
      */
     public function create()
     {
-        $this->viewFile = 'post/index.php';
+        $_SESSION['token'] = Util::generateCsrfToken();
+        $this->viewFile = 'post/create.php';
     }
 
     /**
@@ -69,6 +99,8 @@ class PostController extends AppController
 		if ($this->checkCSRFToken() === false) {
 			//CSRFのチェックで無効な時、暫定エラー対応
 			echo '無効なアクセスです';
+            var_dump($_SESSION['token']);
+            var_dump($_POST['token']);
 			exit;
 		}
 
@@ -82,50 +114,41 @@ class PostController extends AppController
 
         $members = [];
 
-        for ($i = 1; $i <= 10; $i++) {
-            if (!empty($_POST['member'.$i])) {
-                $members[] = $_POST['member'.$i];
+        //　CSVファイルでメンバーidが送られてきた時の処理
+        if ($_POST['sender'] == 'CSV'){
+            $csvMembers = CsvImport::import();
+            foreach ($csvMembers[0] as $member) {
+                $members[] = $member;
             }
         }
 
-        if(isset($_FILES)) {
-            $csv_file = $_FILES['member_id']['tmp_name']; // アップロードされたCSVファイルの一時的な保存場所
-
-            // CSVファイルを読み込む
-            if (($handle = fopen($csv_file, "r")) !== false) {
-                while (($data = fgetcsv($handle)) !== false) {
-                    // CSVの各行から値を取得して配列に追加
-                    if (!empty($data)) {
-                        $csvMembers[] = $data;
-                    }
+        // 直接メンバーidが入力されてきた時の処理
+        if ($_POST['sender'] == '会員個別') {
+            for ($i = 1; $i <= 10; $i++) {
+                if (!empty($_POST['member'.$i])) {
+                    $members[] = $_POST['member'.$i];
                 }
-                fclose($handle); // ファイルを閉じる
             }
         }
-        foreach($csvMembers[0] as $member) {
-            $members[] = $member;
-        }
-
 
 		try {
             // トランザクション開始
-			// $this->postModel->insert($params);
+            $this->postModel->beginTransaction();
+			$this->postModel->insert($params);
             // postテーブルの最後のidを取得
-            $post_id = $this->postMemberModel->getPost();
-            //$post_idには ['post_id'] => 1,[0] => 1　配列が2つできてしまうため、下記コードを記載。
-            $lastPostId = $post_id['post_id'];
+			$lastPostId = $this->postModel->lastInsertId();
             $this->postMemberModel->insertMember($members, $lastPostId);
             // トランザクション終了
+            $this->postModel->commit();
 			header('Location: ./create');
 			exit;
 		} catch (PDOException $e) {
             // ロールバックの処理
-
+            $this->postModel->rollBack();
 			//エラーメッセージを追加
 			$_SESSION['post_add_error'] = 'データ追加エラー';
 			//暫定エラー対応
 			Logger::getInstance()->error('post insert error:' . $e->getMessage());
 		}
 	}
-
 }

@@ -43,8 +43,4 @@ class Config
 	 * ログ保存期間（日）
 	 */
 	const LOGFILE_PERIOD = 30;
-
-	const LOGIN_ID = 'admin';
-
-	const PASSWORD = 'password123';
 }

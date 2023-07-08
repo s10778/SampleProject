@@ -43,4 +43,20 @@ class PostModel extends AppModel
         'created_at',
         'updated_at',
     );
+
+    public function findAllPost($order = '')
+    {
+
+        $sql = 'SELECT * FROM app_posts ';
+
+        if (!empty($order)) {
+            $sql .= $order;
+        }
+
+        return $this->query($sql);
+    }
+
+    public function lastInsertId(){
+        return $this->pdo->lastInsertId();
+    }
 }
