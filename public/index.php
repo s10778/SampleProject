@@ -52,6 +52,9 @@ Routes::getInstance()->addRoute( '/post/create' , 'PostController', 'create');
 Routes::getInstance()->addRoute( '/post/store' , 'PostController', 'store');
 Routes::getInstance()->addRoute( '/post/index' , 'PostController', 'index');
 Routes::getInstance()->addRoute( '/post/indexDetail' , 'PostController', 'indexDetail');
+Routes::getInstance()->addRoute( '/post/edit' , 'PostController', 'edit');
+Routes::getInstance()->addRoute( '/post/update' , 'PostController', 'update');
+Routes::getInstance()->addRoute( '/post/delete' , 'PostController', 'delete' );
 
 if (isset($_GET)) $_GET = Util::sanitize($_GET); //NULLバイト除去　ヌルバイト攻撃対策
 if (isset($_POST)) $_POST = Util::sanitize($_POST); //NULLバイト除去　ヌルバイト攻撃対策

@@ -5,10 +5,9 @@ if (!isset($_SESSION['login_id'])) {
 }
 ?>
 
-<h1>お知らせ新規投稿</h1>
-
-<form method="POST" action="/post/store" enctype="multipart/form-data">
-
+<h1>投稿編集</h1>
+<form method="POST" action="/post/update/<?php echo $data['posts'][0]['post_id']; ?>" enctype="multipart/form-data">
+<!-- <?php var_dump($data['app_posts_categories']) ?> -->
   <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
 
   <div>
@@ -32,17 +31,17 @@ if (!isset($_SESSION['login_id'])) {
 
   <div>
     <label for="sent_date">送信日時</label>
-    <input type="datetime-local" name="sent_date" id="sent_date" required value=""/>
+    <input type="datetime-local" name="sent_date" id="sent_date" required value="<?php echo $data['posts'][0]['sent_date']; ?>"/>
   </div>
 
   <div>
     <label for="title">タイトル</label>
-    <input type="text" name="title" id="title" placeholder="最大文字数100文字" required value=""/>
+    <input type="text" name="title" id="title" placeholder="最大文字数100文字" required value="<?php echo $data['posts'][0]['title']; ?>"/>
   </div>
 
   <div>
     <label for="body">本文</label>
-    <textarea id="body" name="body"></textarea>
+    <textarea id="body" name="body"><?php echo $data['posts'][0]['body']; ?></textarea>
   </div>
 
   <div>

@@ -9,7 +9,7 @@ require_once(Env::MODEL_PATH . 'AppModel.php');
  * @author Yuji Seki
  * @version 1.0.0
  */
-class PostMemberModel extends AppModel
+class PostCategoryIdModel extends AppModel
 {
 
 
@@ -26,7 +26,7 @@ class PostMemberModel extends AppModel
      *
      * @var string
      */
-    protected string $tableName = 'app_posts_members';
+    protected string $tableName = 'app_posts_categories';
 
 
     /**
@@ -34,31 +34,25 @@ class PostMemberModel extends AppModel
      * @var array
      */
     protected array $fields = array(
-        'post_member_id',
+        'post_category_id',
         'post_id',
-        'member_id',
+        'category_id',
         'created_at',
         'updated_at',
     );
 
 
-    /**
-     * データ挿入
-     *
-     * @param string $table テーブル名
-     * @param array $params 挿入パラメータの配列
-     * @return void
-     */
-    public function insertMember($members, $lastPostId)
+    public function insertCategory($categories, $lastPostId)
     {
         // SQLの生成
-        $sql = 'INSERT INTO ' . $this->tableName . ' (post_id, member_id) VALUES ';
+        $sql = 'INSERT INTO ' . $this->tableName . ' (post_id, category_id) VALUES ';
 
         $insertValues = [];
         $bindingParams = [];
-        foreach ($members as $key => $member) {
-            $insertValues[] = "(:postId, :memberId{$key})";
-            $bindingParams[":memberId{$key}"] = $member;
+        foreach ($categories as $key => $category) {
+            $insertValues[] = "(:postId{$key}, :categoryId{$key})";
+            $bindingParams[":postId{$key}"] = $lastPostId;
+            $bindingParams[":categoryId{$key}"] = $category;
         }
         $sql .= implode(', ', $insertValues);
 
@@ -66,25 +60,27 @@ class PostMemberModel extends AppModel
 
         $prepare = $this->pdo->prepare($sql, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 
-        // Bind the lastPostId to the parameter.
-        $bindingParams[":postId"] = $lastPostId;
         foreach ($bindingParams as $key => $value) {
             $prepare->bindValue($key, $value);
         }
-
-        // 実行などの追加処理...
 
         // return文を追加する必要があります
         return $prepare->execute();
     }
 
-    public function exportMember($id)
+    public function findAllCategoryId($order = '')
     {
-        $sql = 'select app_posts_members.member_id FROM app_posts_members WHERE post_id = ' . $id;
+
+        $sql = 'SELECT * FROM app_posts_categories ';
+
+        if (!empty($order)) {
+            $sql .= $order;
+        }
+
         return $this->query($sql);
     }
 
-    public function deleteMember($postId)
+    public function deleteCategory($postId)
     {
         $sql = 'DELETE FROM ' . $this->tableName . ' WHERE post_id = :postId';
 

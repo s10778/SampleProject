@@ -11,18 +11,32 @@ if (!isset($_SESSION['login_id'])) {
         <div style="width: 288px; height: auto; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,.2); margin-bottom: 20px;">
 
             <div><?php echo Util::h($posts['updated_at']); ?></div>
+            <?php foreach ($posts['category_name'] as $name) : ?>
+                <div><?php echo Util::h($name); ?></div>
+            <?php endforeach; ?>
             <div>
                 <button id="myBtn_<?php echo $key ?>">確認</button>
-
                 <div id="myModal_<?php echo $key ?>" class="modal">
                     <!-- Modal content -->
                     <div class="modal-content">
                         <span class="close close_<?php echo $key ?>">&times;</span>
                         <h3>お知らせ詳細</h3>
+                        <p>タイトル</p>
+                        <div><?php echo Util::h($posts['title']); ?></div>
+                        <p>送信日時</p>
+                        <div><?php echo Util::h($posts['sent_date']); ?></div>
+                        <p>送信先</p>
+                        <div><?php echo Util::h($posts['sender']); ?></div>
+                        <p>カテゴリ</p>
+                        <?php foreach ($posts['category_name'] as $name) : ?>
+                            <div><?php echo Util::h($name); ?></div>
+                        <?php endforeach; ?>
                         <label>送信対象</label>
                         <a href="indexDetail/<?php echo $posts['post_id'] ?>">
                             <button>ダウンロード</button>
                         </a>
+                        <p></p>
+                        <div><?php echo Util::h($posts['title']); ?></div>
                     </div>
                 </div>
 
@@ -56,12 +70,12 @@ if (!isset($_SESSION['login_id'])) {
                 </script>
             </div>
             <div>
-                <a href="">
+                <a href="/post/edit/<?php echo Util::h($posts['post_id']); ?>">
                     <button type="button">編集</button>
                 </a>
             </div>
             <div>
-                <a href="">
+                <a href="/post/delete/<?php echo Util::h($posts['post_id']); ?>">
                     <button type="button">削除</button>
                 </a>
             </div>

@@ -202,7 +202,7 @@ class Model
     /**
      * データ更新
      *
-     * @param Blog $blog
+     *
      * @return void
      */
     public function update($id, $params)
