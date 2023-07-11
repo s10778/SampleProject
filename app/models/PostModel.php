@@ -103,6 +103,19 @@ class PostModel extends AppModel
     }
 
 
+    public function deletePost($postId)
+    {
+        $sql = 'DELETE FROM ' . $this->tableName . ' WHERE post_id = :postId';
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->bindParam(':postId', $postId, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+    }
+
+
     /**
      * :を付けたキーに変換する
      *
@@ -119,4 +132,5 @@ class PostModel extends AppModel
 
         return $keysPrepared;
     }
+
 }

@@ -75,9 +75,12 @@ if (!isset($_SESSION['login_id'])) {
                 </a>
             </div>
             <div>
-                <a href="/post/delete/<?php echo Util::h($posts['post_id']); ?>">
-                    <button type="button">削除</button>
-                </a>
+                <form name="delete<?php echo Util::h($posts['post_id']); ?>" method="post" action="/post/delete/<?php echo Util::h($posts['post_id']); ?>">
+                    <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>" />
+                    <a href="#" onclick="javascript:delete<?php echo Util::h($posts['post_id']); ?>.submit()">
+                    <button type="button" >削除</button>
+                    </a>
+                </form>
             </div>
             <div><?php echo Util::h($posts['title']); ?></div>
         </div>

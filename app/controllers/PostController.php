@@ -261,4 +261,28 @@ class PostController extends AppController
 	}
 
 
+    public function delete($id)
+    {
+        if ($this->checkCSRFToken() == false) {
+            //CSRFのチェックで無効な時、暫定エラー対応
+            echo '無効なアクセスです';
+            exit;
+        }
+
+        try {
+            $this->postMemberModel->deleteMember($id);
+            $this->postCategoryIdModel->deleteCategory($id);
+            $this->postModel->deletePost($id);
+        } catch (PDOException $e) {
+            //エラーメッセージを追加
+            $_SESSION['post_delete_error'] = 'データ削除エラー';
+            //暫定エラー対応
+            Logger::getInstance()->error('post delete error:' . $e->getMessage());
+        }
+
+        header('Location: /post/index');
+        exit;
+    }
+
+
 }
