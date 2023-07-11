@@ -19,6 +19,8 @@ require_once(Env::LIB_PATH . 'Logger.php');
 require_once(Env::LIB_PATH . 'Util.php');
 require_once(Env::LIB_PATH . 'Routes.php');
 require_once(Env::LIB_PATH . 'ValidateUtil.php');
+require_once(Env::LIB_PATH . 'CsvImport.php');
+require_once(Env::LIB_PATH . 'CsvExport.php');
 
 //mbstring の日本語設定
 mb_language("japanese");
@@ -46,13 +48,20 @@ Routes::getInstance()->addRoute( '/blog/admin_edit_view' , 'BlogController' , 'a
 Routes::getInstance()->addRoute( '/blog/admin_delete' , 'BlogController' , 'admin_delete', 'id');
 Routes::getInstance()->addRoute( '/login' , 'LoginController', 'index');
 Routes::getInstance()->addRoute( '/login/authenticate' , 'LoginController', 'authenticate');
+Routes::getInstance()->addRoute( '/post/create' , 'PostController', 'create');
+Routes::getInstance()->addRoute( '/post/store' , 'PostController', 'store');
+Routes::getInstance()->addRoute( '/post/index' , 'PostController', 'index');
+Routes::getInstance()->addRoute( '/post/indexDetail' , 'PostController', 'indexDetail');
+Routes::getInstance()->addRoute( '/post/edit' , 'PostController', 'edit');
+Routes::getInstance()->addRoute( '/post/update' , 'PostController', 'update');
+Routes::getInstance()->addRoute( '/post/delete' , 'PostController', 'delete' );
 
 if (isset($_GET)) $_GET = Util::sanitize($_GET); //NULLバイト除去　ヌルバイト攻撃対策
 if (isset($_POST)) $_POST = Util::sanitize($_POST); //NULLバイト除去　ヌルバイト攻撃対策
 
 
-$page = '/' . $_GET['page'];
-
+//ドキュメントルート＋リクエストのURI現在のパスを置き換えて、リクエストされたURLを取得（階層が異なる箇所に配置されても動作させるため。）
+$page = str_replace(__DIR__,'',str_replace('//','/',$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']));
 //URLの値は、.htaccessにて書き換えを実施 /test は page=testになるよう設定
 $controllerName = Routes::getInstance()->getController($page);
 
@@ -68,14 +77,36 @@ Logger::getInstance()->debug( 'param:' .$param );
 if( !empty( $controllerName ) && !empty($actionName) ){
 
     //コントローラーの読み込みと、アクションの実行
-    require_once( Env::CONTROLLER_PATH. $controllerName . '.php' );
+    require_once( ENV::CONTROLLER_PATH. $controllerName . '.php' );
+
+    try{
+        $beforeMethod = new ReflectionMethod( $controllerName , 'beforeAction');
+    }catch(Exception $e){
+        //メソッドが存在しない場合
+        $beforeMethod = null;
+    }
 
     $reflectionMethod = new ReflectionMethod( $controllerName , $actionName);
 
+    try{
+        $afterMethod = new ReflectionMethod( $controllerName , 'afterAction');
+    }catch(Exception $e){
+        //メソッドが存在しない場合
+        $afterMethod = null;
+    }
+
     $controller = new $controllerName();
 
+    //アクション実行前のメソッドの呼び出し
+    if(!empty($beforeMethod)){
+        $beforeMethod->invoke($controller);
+    }
     //アクションの実行
-    $reflectionMethod  -> invoke( $controller , $param );
+    $reflectionMethod ->invoke( $controller , $param );
+    //アクション実行後のメソッドの呼び出し
+    if(!empty($afterMethod)){
+        $afterMethod->invoke($controller);
+    }
 
 }else{
     //404ページを表示
@@ -87,7 +118,6 @@ if( !empty( $controllerName ) && !empty($actionName) ){
 //Viewファイル内で、アクセスするためのデータの設定
 $data = $controller -> getData();
 $validateErrors = $controller -> getValidateErrors();
-
 // テンプレート読み込み ob_startを使用することで、Viewファイルの内容を変数に格納。
 $view = $controller->getView();
 if(!empty($view)) {

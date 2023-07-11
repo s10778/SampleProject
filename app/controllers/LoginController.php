@@ -29,7 +29,7 @@ class LoginController extends AppController
 		$loginId = $_POST['login_id'];
 		$password = $_POST['password'];
 
-		if ($loginId === Config::LOGIN_ID && $password === Config::PASSWORD) {
+		if ($loginId === Env::LOGIN_ID && $password === Env::PASSWORD) {
 			$_SESSION['login_id'] = $_POST['login_id'];
 			header("Location: /");
 			exit;
